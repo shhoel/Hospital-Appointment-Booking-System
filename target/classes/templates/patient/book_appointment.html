@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book Appointment - HealthHub</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .notification-badge {
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #34495e;
+            color: white;
+            height: calc(100vh - 60px);
+            position: fixed;
+            padding-top: 20px;
+        }
+        .sidebar a {
+            display: block;
+            color: white;
+            padding: 15px 20px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        .sidebar a:hover, .sidebar a.active {
+            background-color: #3498db;
+        }
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+        .appointment-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .appointment-card h2 {
+            margin-top: 0;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+        .form-group select, .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        .btn-submit {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .btn-submit:hover {
+            background-color: #2980b9;
+        }
+        .logout-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .logout-btn:hover {
+            background-color: #c0392b;
+        }
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .time-slot {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .time-slot:hover {
+            background-color: #f0f8ff;
+            border-color: #3498db;
+        }
+        .time-slot.selected {
+            background-color: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+        .time-slot.booked {
+            background-color: #f5f5f5;
+            color: #999;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Book Appointment</h1>
+        <div class="user-info">
+            <a href="/patient/notifications" style="color: white; text-decoration: none;">
+                <span th:if="${unreadCount > 0}" class="notification-badge" th:text="${unreadCount}">2</span>
+                Notifications
+            </a>
+            <form action="/logout" method="post">
+                <button type="submit" class="logout-btn">Logout</button>
+            </form>
+        </div>
+    </div>
+    
+    <div class="sidebar">
+        <a href="/patient/dashboard">Dashboard</a>
+        <a href="/patient/profile">My Profile</a>
+        <a href="/patient/book-appointment" class="active">Book Appointment</a>
+        <a href="/patient/appointments">My Appointments</a>
+        <a href="/patient/notifications">Notifications</a>
+    </div>
+    
+    <div class="main-content">
+        <div class="appointment-card">
+            <h2>Book a New Appointment</h2>
+            
+            <form action="/patient/book-appointment" method="post">
+                <div class="form-group">
+                    <label for="practitioner">Select Practitioner</label>
+                    <select id="practitioner" name="practitionerId" required>
+                        <option value="">-- Select Practitioner --</option>
+                        <option th:each="practitioner : ${practitioners}" 
+                                th:value="${practitioner.id}"
+                                th:text="'Dr. ' + ${practitioner.firstName} + ' ' + ${practitioner.lastName} + ' (' + ${practitioner.specialization} + ')'">
+                            Dr. John Doe (Cardiologist)
+                        </option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="appointmentDate">Appointment Date</label>
+                    <input type="date" id="appointmentDate" name="appointmentDate" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Available Time Slots</label>
+                    <div class="time-slots">
+                        <div class="time-slot">09:00 AM</div>
+                        <div class="time-slot">10:00 AM</div>
+                        <div class="time-slot">11:00 AM</div>
+                        <div class="time-slot">12:00 PM</div>
+                        <div class="time-slot">02:00 PM</div>
+                        <div class="time-slot">03:00 PM</div>
+                        <div class="time-slot">04:00 PM</div>
+                        <div class="time-slot">05:00 PM</div>
+                    </div>
+                    <input type="hidden" id="appointmentTime" name="appointmentTime">
+                </div>
+                
+                <div class="form-group">
+                    <label for="reason">Reason for Appointment</label>
+                    <textarea id="reason" name="reason" required></textarea>
+                </div>
+                
+                <button type="submit" class="btn-submit">Book Appointment</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const timeSlots = document.querySelectorAll('.time-slot');
+            const timeInput = document.getElementById('appointmentTime');
+            
+            timeSlots.forEach(slot => {
+                slot.addEventListener('click', function() {
+                    if (!this.classList.contains('booked')) {
+                        // Remove selected class from all slots
+                        timeSlots.forEach(s => s.classList.remove('selected'));
+                        
+                        // Add selected class to clicked slot
+                        this.classList.add('selected');
+                        
+                        // Set the hidden input value
+                        const timeText = this.textContent;
+                        const [time, period] = timeText.split(' ');
+                        let [hours, minutes] = time.split(':');
+                        
+                        if (period === 'PM' && hours !== '12') {
+                            hours = parseInt(hours) + 12;
+                        } else if (period === 'AM' && hours === '12') {
+                            hours = '00';
+                        }
+                        
+                        timeInput.value = `${hours}:${minutes}:00`;
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

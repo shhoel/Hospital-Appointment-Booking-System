@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HealthHub - Register</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .register-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            text-align: center;
+        }
+        .register-container h2 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        .role-options {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+        .role-option {
+            width: 48%;
+            padding: 15px;
+            border: 2px solid #3498db;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .role-option:hover {
+            background-color: #f0f8ff;
+        }
+        .role-option.selected {
+            background-color: #3498db;
+            color: white;
+        }
+        .login-link {
+            margin-top: 20px;
+            display: block;
+            color: #7f8c8d;
+        }
+        .login-link a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <h2>Register as</h2>
+        
+        <div class="role-options">
+            <div class="role-option" onclick="location.href='/register-patient'">
+                <h3>Patient</h3>
+                <p>Book appointments with healthcare providers</p>
+            </div>
+            <div class="role-option" onclick="location.href='/register-practitioner'">
+                <h3>Practitioner</h3>
+                <p>Manage appointments with patients</p>
+            </div>
+        </div>
+        
+        <div class="login-link">
+            Already have an account? <a href="/login">Login here</a>
+        </div>
+    </div>
+</body>
+</html>
