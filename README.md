@@ -1,4 +1,4 @@
-# 🏥 Hospital Appointment Booking System
+# Hospital Appointment Booking System
 
 A complete web application that simplifies hospital appointment management. The system includes separate roles for Admin, Patient, and Practitioner, offering a streamlined way to handle bookings and confirmations.
 
